@@ -12,3 +12,6 @@ wheels/
 # VSCode
 .lsp
 .clj-kondo
+
+# Generated jar file
+src/gensql/gateway.jar
