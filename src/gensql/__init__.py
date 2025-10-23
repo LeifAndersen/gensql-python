@@ -37,6 +37,12 @@ def query(text, db):
     data = __gateway.entry_point.query(text, db)
     return [dict(x) for x in data]
 
-def queryStrict(text, db)
+def queryStrict(text, db):
     data = __gateway.entry_point.queryStrict(text, db)
     return [dict(x) for x in data]
+
+def main():
+    start_server
+
+if __name__ == 'main':
+    main()

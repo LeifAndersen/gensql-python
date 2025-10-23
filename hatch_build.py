@@ -8,9 +8,11 @@ class CustomBuildHook(BuildHookInterface):
         outPath = "src/gensql/gateway.jar"
         inPath = "gateway"
         midPath = "gateway/target/gateway.jar"
+        midPathDir = "gateway/target"
 
         # Check if Jar needs to be rebuilt
         needsRebuild = False
+        # For now, always rebuild
         if not os.path.exists(outPath):
             needsRebuild = True
         else:
@@ -25,3 +27,4 @@ class CustomBuildHook(BuildHookInterface):
         if needsRebuild:
             subprocess.run(["clojure", "-T:build", "uber"], check=True, cwd=inPath)
             shutil.copy(midPath, outPath)
+            shutil.rmtree(midPathDir) 
