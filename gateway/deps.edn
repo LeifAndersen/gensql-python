@@ -1,0 +1,8 @@
+{:deps {org.clojure/clojure {:mvn/version "1.12.1"}
+        probcomp/gensql.query
+        {:git/url "https://github.com/LeifAndersen/GenSQL.query.git"
+         :sha "3a844d9dfd77e79a4d246f808665b217f1e8498a"}
+        net.sf.py4j/py4j {:mvn/version "0.10.9"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.9"}}
+                   :ns-default build}}
+ :paths ["src"]}
