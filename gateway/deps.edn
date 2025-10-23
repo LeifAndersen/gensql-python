@@ -3,7 +3,11 @@
         {:git/url "https://github.com/LeifAndersen/GenSQL.query.git"
          :sha "3a844d9dfd77e79a4d246f808665b217f1e8498a"
          :exclusions [org.clojure/clojurescript
-                      com.google.javascript/closure-compiler-unshaded]}
+                      com.google.javascript/closure-compiler-unshaded
+                      ring/ring-core
+                      ring/ring-jetty-adapter
+                      ring-cors/ring-cors
+                      cljs-bean/cljs-bean]}
         net.sf.py4j/py4j {:mvn/version "0.10.9"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.9"}}
                    :ns-default build}}
