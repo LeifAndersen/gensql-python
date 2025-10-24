@@ -1,22 +1,17 @@
 (ns gensql.gateway
-  (:require [gensql.query.permissive :as permissive]
-            [gensql.query.strict :as strict]
-            [gensql.query.db :as db])
-  (:import [py4j GatewayServer])
-  (:gen-class))
+   (:require [gensql.query.permissive :as permissive]
+             [gensql.query.strict :as strict]
+             [gensql.query.db :as db])
+   (:gen-class
+    :name gensql.gateway.Gateway
+    :main false
+    :methods [#^{:static true} [slurpDB [String] Object]
+              #^{:static true} [query [String Object] Object]
+              #^{:static true} [queryString [String Object] Object]]))
 
-(defprotocol IGatewayEntryPoint
-  (slurpDB [this pathB])
-  (query [this text db])
-  (queryString [this text db]))
-
-(deftype GatewayEntryPoint []
-  IGatewayEntryPoint
-  (slurpDB [_ path] (atom (db/slurp path)))
-  (query [_ text db] (permissive/query text db))
-  (queryString [_ text db] (permissive/query text db)))
-
-(defn -main []
-  (let [gateway (GatewayServer. (->GatewayEntryPoint))]
-    (.start gateway)
-    (println "Running...")))
+ (defn -slurpDB [path] 
+   (atom (db/slurp path)))
+ (defn -query [text db] 
+   (permissive/query text db))
+ (defn -queryString [text db]
+   (strict/query text db))

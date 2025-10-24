@@ -1,37 +1,39 @@
 import os
 from importlib import resources
 
-from py4j.java_gateway import JavaGateway, GatewayParameters, launch_gateway
+from py4j.java_gateway import JavaGateway
 
 __gateway = None
+__entry = None
 
-def start_server():
+def start_gateway():
     global __gateway
+    global __entry
     if not __gateway:
         with resources.path(__package__, "gateway.jar") as gateway_jar:
-            port = launch_gateway(
-                classpath=str(gateway_jar),
+            __gateway = JavaGateway.launch_gateway(
+                jarpath=str(gateway_jar),
                 die_on_exit=True
             )
-        __gateway = JavaGateway(gateway_parameters=GatewayParameters(port=port))
+            __entry = __gateway.jvm.gensql.gateway.Gateway
 
 def slurpDB(path):
-    start_server()
+    start_gateway()
     p = os.path.abspath(path)
-    return __gateway.entry_point.slurpDB(p)
+    return __entry.slurpDB(p)
 
 def query(text, db):
-    start_server()
-    data = __gateway.entry_point.query(text, db)
+    start_gateway()
+    data = __entry.query(text, db)
     return [dict(x) for x in data]
 
 def queryStrict(text, db):
-    start_server()
-    data = __gateway.entry_point.queryStrict(text, db)
+    start_gateway()
+    data = __entry.queryStrict(text, db)
     return [dict(x) for x in data]
 
 def main():
-    start_server()
+    start_gateway()
 
 if __name__ == 'main':
     main()
