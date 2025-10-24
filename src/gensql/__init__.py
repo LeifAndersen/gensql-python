@@ -1,32 +1,19 @@
-import subprocess
-import sys
 import os
 from importlib import resources
 
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters, launch_gateway
 
-__gateway_server = None
 __gateway = None
 
 def start_server():
     global __gateway
-    global __gateway_server
-    if __gateway_server == None:
+    if not __gateway:
         with resources.path(__package__, "gateway.jar") as gateway_jar:
-            __gateway_server = subprocess.Popen(
-                ["java", "-jar", gateway_jar],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1,
-                universal_newlines=True,
+            port = launch_gateway(
+                classpath=str(gateway_jar),
+                die_on_exit=True
             )
-        wait_text="Running..."
-        for line in __gateway_server.stdout:
-            print(line)
-            if wait_text in line:
-                break
-        __gateway = JavaGateway()
+        __gateway = JavaGateway(gateway_parameters=GatewayParameters(port=port))
 
 def slurpDB(path):
     start_server()
@@ -34,15 +21,17 @@ def slurpDB(path):
     return __gateway.entry_point.slurpDB(p)
 
 def query(text, db):
+    start_server()
     data = __gateway.entry_point.query(text, db)
     return [dict(x) for x in data]
 
 def queryStrict(text, db):
+    start_server()
     data = __gateway.entry_point.queryStrict(text, db)
     return [dict(x) for x in data]
 
 def main():
-    start_server
+    start_server()
 
 if __name__ == 'main':
     main()
