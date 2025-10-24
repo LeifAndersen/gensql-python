@@ -1,36 +1,44 @@
 import os
 from importlib import resources
+from typing import Any
 
 from py4j.java_gateway import JavaGateway
 
-__gateway = None
-__entry = None
+_gateway = None
+_entry = None
 
 def start_gateway():
-    global __gateway
-    global __entry
-    if not __gateway:
+    global _gateway
+    global _entry
+    if not _gateway:
         with resources.path(__package__, "gateway.jar") as gateway_jar:
-            __gateway = JavaGateway.launch_gateway(
+            _gateway = JavaGateway.launch_gateway(
                 jarpath=str(gateway_jar),
                 die_on_exit=True
             )
-            __entry = __gateway.jvm.gensql.gateway.Gateway
+            _entry = _gateway.jvm.gensql.gateway.Gateway
 
-def slurpDB(path):
-    start_gateway()
-    p = os.path.abspath(path)
-    return __entry.slurpDB(p)
+class DB:
+    def __init__(self, path: str) -> None:
+        start_gateway()
+        p = os.path.abspath(path)
+        self.db = _entry.slurpDB(p)
 
-def query(text, db):
-    start_gateway()
-    data = __entry.query(text, db)
-    return [dict(x) for x in data]
+    def query(self, text: str, mode: str = "permissive") -> list[dict[str, Any]]:
+        if mode == "permissive":
+            return self.queryPermissive(text)
+        elif mode == "strict":
+            return self.queryStrict(text)
+        else:
+            raise ValueError("Invalid mode", mode)
 
-def queryStrict(text, db):
-    start_gateway()
-    data = __entry.queryStrict(text, db)
-    return [dict(x) for x in data]
+    def queryPermissive(self, text: str) -> list[dict[str, Any]]:
+        data = _entry.query(text, self.db)
+        return [dict(x) for x in data]
+
+    def queryStrict(self, text: str) -> list[dict[str, Any]]:
+        data = _entry.queryStrict(text, self.db)
+        return [dict(x) for x in data]
 
 def main():
     start_gateway()
