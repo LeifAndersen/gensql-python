@@ -7,11 +7,11 @@
     :main false
     :methods [#^{:static true} [slurpDB [String] Object]
               #^{:static true} [query [String Object] Object]
-              #^{:static true} [queryString [String Object] Object]]))
+              #^{:static true} [queryStrict [String Object] Object]]))
 
  (defn -slurpDB [path] 
    (atom (db/slurp path)))
  (defn -query [text db] 
    (permissive/query text db))
- (defn -queryString [text db]
+ (defn -queryStrict [text db]
    (strict/query text db))

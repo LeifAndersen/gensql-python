@@ -1,6 +1,6 @@
 [project]
 name = "gensql"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python Bindings for GenSQL"
 readme = "README.md"
 authors = [
@@ -26,3 +26,12 @@ artifacts = ["*.jar"]
 
 [tool.hatch.build.hooks.custom]
 path = "hatch_build.py"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+]
+
+[tool.pytest.ini_options]
+addopts="--cov=gensql --cov-report=term-missing"
