@@ -23,6 +23,16 @@ Optionally you can pick between the `strict` and `permissive` variants of gensql
 db.query("SELECT * FROM data LIMIT 5", mode="permissive")
 ```
 
+You can also pass the results directly into `DataFrame` from pandas:
+
+```
+import gensql
+import pandas as pd
+
+db = gensql.DB("db.edn")
+df = pd.DataFrame(db.query("SELECT * FROM data LIMIT 5"))
+```
+
 ## Known Limitations
 
 For the moment, only one Python process can use GenSQL at a time. Starting up a second one will hang until the first one finishes.
