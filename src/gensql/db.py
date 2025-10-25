@@ -4,13 +4,15 @@ from typing import Any
 
 from py4j.java_gateway import JavaGateway
 
-_gateway = None
-_entry = None
+_gateway: Any = None
+_entry: Any = None
 
 def start_gateway():
     global _gateway
     global _entry
     if not _gateway:
+        if __package__ is None:
+            raise RuntimeError("This function must be called from within a package")
         with resources.path(__package__, "gateway.jar") as gateway_jar:
             _gateway = JavaGateway.launch_gateway(
                 jarpath=str(gateway_jar),
