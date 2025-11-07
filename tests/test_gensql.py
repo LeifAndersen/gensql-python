@@ -18,3 +18,8 @@ def test_modes():
     assert db.query("SELECT * FROM data LIMIT 10", mode="permissive") == db.query("SELECT * FROM data LIMIT 10", mode="strict")
     with pytest.raises(ValueError):
         db.query("SELECT * FROM data", mode="doesnotexist")
+
+def test_large_data():
+    db = gensql.DB(db_file)
+    ret = db.query("SELECT * FROM data")
+    assert len(ret) == 1000
