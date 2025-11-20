@@ -2,7 +2,7 @@
 
 This package provides bindings for [GenSQL](https://arxiv.org/abs/2406.15652).
 
-This package requires Java (>= 24) to be installed, either in `$JAVA_HOME`, or in your `$PATH`.
+This package requires Java (>= 17) to be installed, either in `$JAVA_HOME`, or in your `$PATH`.
 
 ## Usage:
 
