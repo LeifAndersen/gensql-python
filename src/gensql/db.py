@@ -8,6 +8,14 @@ _gateway: Any = None
 _entry: Any = None
 
 def start_gateway():
+    """
+    Start the GenSQL gateway, one per process.
+
+    This gateway is started automatically when a DB is created.
+
+    Current limitation: only one instance of this gateway can be running
+    a given machine.
+    """
     global _gateway
     global _entry
     if not _gateway:
@@ -21,12 +29,30 @@ def start_gateway():
             _entry = _gateway.jvm.gensql.gateway.Gateway
 
 class DB:
+    """
+    A GenSQL Database
+    """
     def __init__(self, path: str) -> None:
+        """
+        Initialize a GenSQL Database
+
+        Parameters:
+            path: The path to the db.edn file.
+        """
         start_gateway()
         p = os.path.abspath(path)
         self.db = _entry.slurpDB(p)
 
     def query(self, text: str, mode: str = "permissive") -> list[dict[str, Any]]:
+        """
+        Query the database.
+
+        Parameters:
+            text: The query text.
+            mode: The query language. Can be one of:
+                - permissive
+                - string
+        """
         if mode == "permissive":
             return self.queryPermissive(text)
         elif mode == "strict":
