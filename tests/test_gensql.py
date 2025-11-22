@@ -23,3 +23,8 @@ def test_large_data():
     db = gensql.DB(db_file)
     ret = db.query("SELECT * FROM data")
     assert len(ret) == 1000
+
+def test_bad_query():
+    db = gensql.DB(db_file)
+    with pytest.raises(ValueError) as e:
+        db.query("BadQuery")

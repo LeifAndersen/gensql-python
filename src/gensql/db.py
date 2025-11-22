@@ -3,6 +3,7 @@ from importlib import resources
 from typing import Any
 
 from py4j.java_gateway import JavaGateway
+from py4j.protocol import Py4JJavaError
 
 _gateway: Any = None
 _entry: Any = None
@@ -53,12 +54,15 @@ class DB:
                 - permissive
                 - string
         """
-        if mode == "permissive":
-            return self._queryPermissive(text)
-        elif mode == "strict":
-            return self._queryStrict(text)
-        else:
-            raise ValueError("Invalid mode", mode)
+        try:
+            if mode == "permissive":
+                return self._queryPermissive(text)
+            elif mode == "strict":
+                return self._queryStrict(text)
+            else:
+                raise ValueError("Invalid mode", mode)
+        except Py4JJavaError as e:
+            raise ValueError(f"""Invalid query: {e.java_exception.getMessage()}""") from None
 
     def _queryPermissive(self, text: str) -> list[dict[str, Any]]:
         data = _entry.query(text, self.db)
