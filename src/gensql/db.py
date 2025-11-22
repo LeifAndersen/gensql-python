@@ -54,16 +54,16 @@ class DB:
                 - string
         """
         if mode == "permissive":
-            return self.queryPermissive(text)
+            return self._queryPermissive(text)
         elif mode == "strict":
-            return self.queryStrict(text)
+            return self._queryStrict(text)
         else:
             raise ValueError("Invalid mode", mode)
 
-    def queryPermissive(self, text: str) -> list[dict[str, Any]]:
+    def _queryPermissive(self, text: str) -> list[dict[str, Any]]:
         data = _entry.query(text, self.db)
         return [dict(x) for x in data]
 
-    def queryStrict(self, text: str) -> list[dict[str, Any]]:
+    def _queryStrict(self, text: str) -> list[dict[str, Any]]:
         data = _entry.queryStrict(text, self.db)
         return [dict(x) for x in data]
