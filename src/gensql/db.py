@@ -23,7 +23,7 @@ def start_gateway():
             raise RuntimeError("This function must be called from within a package")
         with resources.path(__package__, "gateway.jar") as gateway_jar:
             _gateway = JavaGateway.launch_gateway(
-                jarpath=str(gateway_jar),
+                classpath=str(gateway_jar),
                 die_on_exit=True
             )
             _entry = _gateway.jvm.gensql.gateway.Gateway
