@@ -32,7 +32,3 @@ import pandas as pd
 db = gensql.DB("db.edn")
 df = pd.DataFrame(db.query("SELECT * FROM data LIMIT 5"))
 ```
-
-## Known Limitations
-
-For the moment, only one Python process can use GenSQL at a time. Starting up a second one will hang until the first one finishes.

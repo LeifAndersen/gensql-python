@@ -32,6 +32,9 @@ def start_gateway():
 class DB:
     """
     A GenSQL Database
+
+    Attributes:
+        db: A java object containing the actual database.
     """
     def __init__(self, path: str) -> None:
         """
@@ -46,13 +49,17 @@ class DB:
 
     def query(self, text: str, mode: str = "permissive") -> list[dict[str, Any]]:
         """
-        Query the database.
+        Query the database, the result can passed to the Pandas 
+        DataFrame constructor.
 
         Parameters:
             text: The query text.
             mode: The query language. Can be one of:
                 - permissive
                 - string
+
+        Returns:
+            The result of the query.
         """
         try:
             if mode == "permissive":

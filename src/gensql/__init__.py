@@ -1,7 +1,13 @@
-from .db import DB, start_gateway
+"""
+GenSQL
+======
 
-def main():
-    db.start_gateway()
+Python bindings for GenSQL.
 
-if __name__ == 'main':
-    main()
+This package requires Java (>= 17) to be installed, either in `$JAVA_HOME`, 
+or in `$PATH`.
+"""
+
+from .db import DB
+
+__all__ = ["DB"]
